@@ -1,0 +1,559 @@
+<!-- 
+* use "mvn -P  packageWS clean package -e" to create the aar package, ready to upload to axis2
+* 
+* use "mvn -P  java2wsdl2code clean compile -e" to generate server code based on Axis2ServiceExample.java class
+* 
+* NOTE:  %AXIS2_HOME% environment variable has to be defined in your system with the path to your axis2 installation to use the pom.xml
+* 
+ -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>antuansoft</groupId>
+  <artifactId>axi2-xmlbeans</artifactId>
+  <version>1.0.0</version>
+  
+  <dependencies>
+  
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.17</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.10</version>
+			<scope>test</scope>
+		</dependency>
+		
+		<dependency>
+          <groupId>org.apache.axis2</groupId>
+          <artifactId>axis2</artifactId>
+          <version>1.6.0</version>
+          <scope>provided</scope>
+        </dependency>
+        
+         <dependency>
+            <groupId>org.apache.axis2</groupId>
+            <artifactId>axis2-xmlbeans</artifactId>
+            <version>1.6.0</version>
+            <scope>provided</scope>
+        </dependency>
+        
+        <dependency>
+			<groupId>commons-validator</groupId>
+			<artifactId>commons-validator</artifactId>
+			<version>1.4.0</version>
+		</dependency>
+        
+        <!-- 
+        <dependency>
+		    <groupId>com.securitasdirect</groupId>
+		    <artifactId>SP_CamService-test-client</artifactId>
+		    <version>1.0.0</version>		    
+		    <scope>system</scope>
+		    <systemPath>${project.basedir}/lib/SP_CamService-test-client.jar</systemPath>
+		</dependency>
+		
+		 
+		<dependency>
+		    <groupId>com.securitasdirect</groupId>
+		    <artifactId>SP_ZonesData-test-client</artifactId>
+		    <version>1.0.0</version>		    
+		    <scope>system</scope>
+		    <systemPath>${project.basedir}/lib/SP_ZonesData-test-client.jar</systemPath>
+		</dependency>
+		-->
+		<dependency>
+		    <groupId>com.securitasdirect</groupId>
+		    <artifactId>CamServiceServerStubs</artifactId>
+		    <version>1.0.0</version>		    
+		    <scope>system</scope>
+		    <systemPath>${project.basedir}/lib/Axis2ServiceExampleServerStubs.jar</systemPath>
+		</dependency>	
+		
+		<dependency>
+		    <groupId>com.securitasdirect</groupId>
+		    <artifactId>XBeans-packaged</artifactId>
+		    <version>1.0.0</version>		    
+		    <scope>system</scope>
+		    <systemPath>${project.basedir}/lib/XBeans-packaged.jar</systemPath>
+		</dependency>
+		
+   </dependencies>
+ 
+ 
+ <profiles>
+ 
+  <profile>
+  	<id>packageWS</id> <!-- GENERATE ARR PACKAGE -->
+    <activation>
+			<activeByDefault>true</activeByDefault>
+	</activation>
+    <build>				
+		<plugins>
+		
+		
+			  <plugin>
+		           <groupId>org.apache.maven.plugins</groupId>
+		           <artifactId>maven-compiler-plugin</artifactId>
+		           <version>2.3.1</version>
+		           <configuration>
+		               <source>1.6</source>
+		               <target>1.6</target>
+		               <optimize>true</optimize>
+		           </configuration>
+		       </plugin>
+		
+		
+               <!-- This plugin provides the ability to run Ant tasks from within Maven. You can even embed your Ant scripts in the POM! -->
+               <plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.1</version>
+				<executions>
+					<execution>
+						<!-- Testing to launch 2 executios-->
+						<id>id.generate-sources-1</id>
+						<phase>generate-sources</phase>
+							<goals>
+								<goal>run</goal>
+							</goals>
+							<configuration>
+								<tasks>
+									<echo>in generate-sources phase (2 of 21)</echo>
+								</tasks>
+							</configuration>
+					</execution>
+					<execution>
+						<!-- Copy generated services.xml to build location -->
+					    <id>id.prepare-package</id>
+						<phase>prepare-package</phase>
+							<goals>
+								<goal>run</goal>
+							</goals>
+							<configuration>
+								<tasks>									
+									<echo>Coping resources</echo>
+									<copy file="${project.build.directory}/build/classes/services.xml" todir="${project.build.directory}/build/classes/META-INF/"/>	
+									<copy file="${project.build.directory}/build/classes/Axis2ServiceExample.wsdl" todir="${project.build.directory}/build/classes/META-INF/"/>										
+									<copy todir="${project.build.directory}/build/classes/lib">
+									    <fileset dir="${basedir}/lib">
+									      <include name="**/*.jar"/>
+									    </fileset>
+									</copy>							
+									<delete file="${project.build.directory}/build/classes/services.xml"/>
+									<delete file="${project.build.directory}/build/classes/Axis2ServiceExample.wsdl"/>
+								</tasks>
+							</configuration>
+					</execution>
+				</executions>
+      		</plugin>
+            
+            <plugin>
+                <groupId>org.apache.axis2</groupId>
+                <artifactId>axis2-aar-maven-plugin</artifactId>
+                <version>1.6.0</version>
+                <extensions>true</extensions>
+                <executions>
+					<execution>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>aar</goal>
+						</goals>
+		                <configuration>
+			                <aarDirectory>${project.build.directory}/build/classes</aarDirectory>
+			                <classesDirectory>${project.build.directory}/build/classes</classesDirectory>
+			                <servicesXmlFile>${project.build.directory}/build/classes/META-INF/services.xml</servicesXmlFile>
+			                <wsdlFile>${project.build.directory}/build/classes/META-INF/Axis2ServiceExample.wsdl</wsdlFile>
+			                <wsdlFileName>Axis2ServiceExample.wsdl</wsdlFileName>
+			                			               
+		                </configuration>   
+		           </execution>
+		        </executions>                             
+            </plugin>   
+		
+		</plugins>
+	</build>
+  </profile>
+  
+   <profile>
+			<id>java2wsdl2codeclient</id> <!-- GENERATE CLIENT CODE  BASED ON WSDL -->
+			<build>				
+				<plugins>
+				
+			        <plugin>
+			           <groupId>org.apache.maven.plugins</groupId>
+			           <artifactId>maven-compiler-plugin</artifactId>
+			           <version>2.3.1</version>
+			           <configuration>
+			               <source>1.6</source>
+			               <target>1.6</target>
+			               <optimize>true</optimize>
+			           </configuration>
+			           <executions>			               
+			                <execution>
+			                    <id>default-compile</id> <!-- Avoid default compilation -->
+			                    <phase>never</phase>
+			                    <goals>
+			                        <goal>compile</goal>
+			                    </goals>
+			                </execution>
+		               </executions>
+			        </plugin>
+				
+					<!--  This plugin takes as input a WSDL and generates client and server stubs for calling or implementing a Web service matching the WSDL.-->
+					<plugin>
+			                <groupId>org.apache.axis2</groupId>
+			                <artifactId>axis2-wsdl2code-maven-plugin</artifactId>
+			                <version>1.6.0</version>
+			                <executions>
+			                    <execution>
+			                    	<id>SP_CamService_Generate_Client</id>
+			                    	<phase>generate-sources</phase>			            		
+			                        <goals>
+			                            <goal>wsdl2code</goal>
+			                        </goals>
+			                        <configuration>
+			                            <packageName>com.antuansoft.xmlbeans.client</packageName>
+			                            <wsdlFile>http://10.2.144.63:9763/services/SP_CamService?wsdl</wsdlFile>	                            
+			                            <databindingName>xmlbeans</databindingName>
+			                            <outputDirectory>${project.build.directory}/wsdl2javaClient/SP_CamService</outputDirectory>
+			                            <generateServerSide>false</generateServerSide>	                            
+			                            <generateServerSideInterface>false</generateServerSideInterface>	                  
+			                            <generateServicesXml>false</generateServicesXml>			                                  
+			                        </configuration>
+			                    </execution>
+			                    <execution>
+			                    	<id>SP_ZonesData_Generate_Client</id>
+			                    	<phase>generate-sources</phase>			            		
+			                        <goals>
+			                            <goal>wsdl2code</goal>
+			                        </goals>
+			                        <configuration>
+			                            <packageName>com.antuansoft.xmlbeans.client</packageName>
+			                            <wsdlFile>http://10.2.144.63:9763/services/SP_ZonesData?wsdl</wsdlFile>	                            
+			                            <databindingName>xmlbeans</databindingName>
+			                            <outputDirectory>${project.build.directory}/wsdl2javaClient/SP_ZonesData</outputDirectory>
+			                            <generateServerSide>false</generateServerSide>	                            
+			                            <generateServerSideInterface>false</generateServerSideInterface>	                  
+			                            <generateServicesXml>false</generateServicesXml>			                                  
+			                        </configuration>
+			                    </execution>
+			                </executions>
+	               </plugin>	
+	               
+	                <!-- This plugin provides the ability to run Ant tasks from within Maven. You can even embed your Ant scripts in the POM! -->
+	                <!-- Compile and package client side -->
+	               <plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-antrun-plugin</artifactId>
+					<version>1.1</version>
+					<executions>						
+						<execution>			
+						 	<id>SP_CamService_Package_Client</id>				
+							<phase>generate-sources</phase>
+								<goals>
+									<goal>run</goal>
+								</goals>
+								<configuration>
+									<tasks>			
+										<echo>Processing SP_CamService....</echo>
+									 	<property  name="project.base.dir" value="${project.build.directory}/wsdl2javaClient/SP_CamService"/>						
+										<ant antfile="${project.build.directory}/wsdl2javaClient/SP_CamService/build.xml" target="jar.client"/> 
+										<copy file="${project.build.directory}/wsdl2javaClient/SP_CamService/build/lib/SP_CamService-test-client.jar" todir="${project.build.directory}"/>										
+									</tasks>
+								</configuration>
+							</execution>
+							<execution>			
+						 	<id>SP_ZonesData_Package_Client</id>				
+							<phase>generate-sources</phase>
+								<goals>
+									<goal>run</goal>
+								</goals>
+								<configuration>
+									<tasks>													
+										<echo>Processing SP_ZonesData....</echo>
+										<property  name="project.base.dir" value="${project.build.directory}/wsdl2javaClient/SP_ZonesData"/>						
+										<ant antfile="${project.build.directory}/wsdl2javaClient/SP_ZonesData/build.xml" target="jar.client"/> 
+										<copy file="${project.build.directory}/wsdl2javaClient/SP_ZonesData/build/lib/SP_ZonesData-test-client.jar" todir="${project.build.directory}"/>
+									</tasks>
+								</configuration>
+							</execution>
+					 	</executions>
+	      			</plugin>
+	
+				</plugins>
+  			</build>
+  </profile>
+  
+  
+  <profile>
+			<id>java2wsdl2code</id> <!-- GENERATE WSLD, SERVICE.XML AND CODE SKELETON BASED ON CamService.java -->
+			<build>				
+				<plugins>
+				
+					<!-- The Compiler Plugin is used to compile the sources of your project. 	 -->
+					<!-- Compile CamService.java to generate WSDL and Services.xml -->
+			        <plugin>
+			           <groupId>org.apache.maven.plugins</groupId>
+			           <artifactId>maven-compiler-plugin</artifactId>
+			           <version>2.3.1</version>
+			           <configuration>
+			               <source>1.6</source>
+			               <target>1.6</target>
+			               <optimize>true</optimize>
+			               <includes>
+                     			<include>**/Axis2ServiceExample.java</include>
+                     			<include>**/response/*.java</include>    
+                     			<include>**/exception/*.java</include>                     			
+                  		   </includes>
+			           </configuration>
+			           <executions>
+			                <execution>
+			                    <id>pre-compile</id> <!--  used for precompile websevices classes, need to use java2wsdl  -->
+			                    <phase>generate-sources</phase>
+			                    <goals>
+			                        <goal>compile</goal>
+			                    </goals>
+			                </execution>
+			                <execution>
+			                    <id>default-compile</id> <!-- Avoid default compilation -->
+			                    <phase>never</phase>
+			                    <goals>
+			                        <goal>compile</goal>
+			                    </goals>
+			                </execution>
+		               </executions>
+			        </plugin>
+			        
+			        <!-- This plugin takes as input a Java class and generates a WSDL, which describes a Web service for invoking the classes methods. -->
+			        <!-- Generate WSDL based on compiled classes in pre-compile step -->
+		      		<plugin>
+				        <groupId>org.apache.axis2</groupId>
+				        <artifactId>axis2-java2wsdl-maven-plugin</artifactId>
+				        <version>1.6.0</version>
+				        <configuration>
+				          <className>com.antuansoft.services.template.Axis2ServiceExample</className>
+				          <!--  
+					          <schemaTargetNamespace>http://com.securitasdirect.es.ws/xsd</schemaTargetNamespace>
+					      --> 
+					     <targetNamespace>http://com.antuansoft.es.ws</targetNamespace>
+				         
+				          <outputFileName>${project.build.directory}/build/classes/META-INF/Axis2ServiceExample.wsdl</outputFileName>
+				        </configuration>
+				        <executions>
+				          <execution>		      
+				            <phase>generate-sources</phase>				            
+				            <goals>
+				              <goal>java2wsdl</goal>
+				            </goals>
+				          </execution>
+				         </executions>
+				      </plugin>
+	
+	
+					  <!-- Generate Server classes based on WSDL generated in last step -->
+					  <plugin>
+			                <groupId>org.apache.axis2</groupId>
+			                <artifactId>axis2-wsdl2code-maven-plugin</artifactId>
+			                <version>1.6.0</version>
+			                <executions>
+			                    <execution>
+			                    	<phase>generate-sources</phase>			            		
+			                        <goals>
+			                            <goal>wsdl2code</goal>
+			                        </goals>
+			                        <configuration>
+			                            <packageName>com.antuansoft.services.ws.skeleton</packageName>
+			                            <wsdlFile>${project.build.directory}/build/classes/META-INF/Axis2ServiceExample.wsdl</wsdlFile>	                            
+			                            <databindingName>xmlbeans</databindingName>
+			                            <outputDirectory>${project.build.directory}/wsdl2java</outputDirectory>
+			                            <generateServerSide>true</generateServerSide>	                            
+			                            <generateServerSideInterface>true</generateServerSideInterface>	                  
+			                            <generateServicesXml>true</generateServicesXml>
+			                            <namespaceToPackages>http://common.ws.antuansoft.com/xsd=com.antuansoft.services</namespaceToPackages>        
+			                        </configuration>
+			                    </execution>
+			                </executions>
+		               </plugin>	
+		               
+		               <!-- This plugin provides the ability to run Ant tasks from within Maven. You can even embed your Ant scripts in the POM! -->
+	               	   <!-- Compile and package server side -->
+		               <plugin> 
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<version>1.1</version>
+						<executions>						
+							<execution>							
+								<phase>generate-sources</phase>
+									<goals>
+										<goal>run</goal>
+									</goals>
+									<configuration>
+										<tasks>			
+										 	<property  name="project.base.dir" value="${project.build.directory}/wsdl2java"/>						
+											<ant antfile="${project.build.directory}/wsdl2java/build.xml" target="jar.server"/> 
+											<move file="${project.build.directory}/wsdl2java/build/lib/Axis2ServiceExample.aar" tofile="${project.build.directory}/Axis2ServiceExampleServerStubs.jar"/>											
+											<move file="${project.build.directory}/wsdl2java/build/lib/XBeans-packaged.jar" tofile="${project.build.directory}/XBeans-packaged.jar"/>
+											<move file="${project.build.directory}/wsdl2java/resources/Axis2ServiceExample.wsdl" tofile="${project.build.directory}/Axis2ServiceExample.wsdl"/>
+											<move file="${project.build.directory}/wsdl2java/resources/services.xml" tofile="${project.build.directory}/services.xml"/>											
+										</tasks>
+									</configuration>
+							</execution>
+						 </executions>
+		      			</plugin>
+		               
+	
+				</plugins>
+			</build>
+
+  </profile>
+  <profile>
+  	<id>testWS</id> <!-- TEST LOCAL WEBSERVICES-->
+  	<build>				
+				<plugins>
+									
+					
+					    <plugin>
+					        <groupId>com.smartbear.soapui</groupId>
+					        <artifactId>soapui-maven-plugin</artifactId>
+					        <version>4.6.1</version>
+					        <executions>						
+								<execution>							
+									<phase>test</phase>
+										<goals>
+											<goal>test</goal>
+										</goals>								
+								        <configuration>
+								            <projectFile>src/test/resources/SecuritasDirect-CamServices-soapui-project.xml</projectFile>
+								            <projectProperties>
+								                <value>message=Hello World!</value>
+								            </projectProperties>
+								        </configuration>
+								</execution>
+						   </executions>
+					    </plugin>
+
+				
+				</plugins>
+  	</build>
+  </profile>
+ </profiles> 
+ 
+ 
+   <build>
+    <sourceDirectory>src/main</sourceDirectory>
+    <finalName>Axis2ServiceExample</finalName>
+    <outputDirectory>${project.build.directory}/build/classes</outputDirectory>
+    
+    
+    <plugins>
+    		
+    		 <plugin>
+	           <groupId>org.apache.maven.plugins</groupId>
+	           <artifactId>maven-compiler-plugin</artifactId>
+	           <version>2.3.1</version>
+	           <configuration>
+	               <source>1.6</source>
+	               <target>1.6</target>
+	               <optimize>true</optimize>
+	           </configuration>
+	           
+	        </plugin>
+	        
+	        <plugin>
+		        <groupId>org.apache.maven.plugins</groupId>
+		        <artifactId>maven-jar-plugin</artifactId>
+		        <version>2.3.2</version>
+		        <configuration>		          
+		        </configuration>
+		        <executions>			                
+	                <execution>
+	                    <id>default-jar</id><!-- Override default jar plugin config -->
+	                    <phase>never</phase>
+	                    <goals>
+	                        <goal>jar</goal>
+	                    </goals>
+	                </execution>
+                </executions>
+		    </plugin>
+	  
+    </plugins>
+
+
+    <pluginManagement>
+    	<plugins>
+    		<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+    		<plugin>
+    			<groupId>org.eclipse.m2e</groupId>
+    			<artifactId>lifecycle-mapping</artifactId>
+    			<version>1.0.0</version>
+    			<configuration>
+    				<lifecycleMappingMetadata>
+    					<pluginExecutions>
+    						<pluginExecution>
+    							<pluginExecutionFilter>
+    								<groupId>
+    									org.apache.maven.plugins
+    								</groupId>
+    								<artifactId>
+    									maven-antrun-plugin
+    								</artifactId>
+    								<versionRange>[1.1,)</versionRange>
+    								<goals>
+    									<goal>run</goal>
+    								</goals>
+    							</pluginExecutionFilter>
+    							<action>
+    								<ignore></ignore>
+    							</action>
+    						</pluginExecution>
+    						<pluginExecution>
+    							<pluginExecutionFilter>
+    								<groupId>org.apache.axis2</groupId>
+    								<artifactId>
+    									axis2-wsdl2code-maven-plugin
+    								</artifactId>
+    								<versionRange>
+    									[1.6.0,)
+    								</versionRange>
+    								<goals>
+    									<goal>wsdl2code</goal>
+    								</goals>
+    							</pluginExecutionFilter>
+    							<action>
+    								<ignore></ignore>
+    							</action>
+    						</pluginExecution>
+    						<pluginExecution>
+    							<pluginExecutionFilter>
+    								<groupId>org.apache.axis2</groupId>
+    								<artifactId>
+    									axis2-java2wsdl-maven-plugin
+    								</artifactId>
+    								<versionRange>
+    									[1.6.0,)
+    								</versionRange>
+    								<goals>
+    									<goal>java2wsdl</goal>
+    								</goals>
+    							</pluginExecutionFilter>
+    							<action>
+    								<ignore></ignore>
+    							</action>
+    						</pluginExecution>
+    					</pluginExecutions>
+    				</lifecycleMappingMetadata>
+    			</configuration>
+    		</plugin>
+    	</plugins>
+    </pluginManagement>
+  </build>
+ 
+  
+  
+  
+  
+</project>

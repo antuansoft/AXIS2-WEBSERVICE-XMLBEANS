@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions targetNamespace="http://com.antuansoft.es.ws" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:ns="http://template.services.antuansoft.com" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://com.antuansoft.es.ws" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:ax23="http://response.template.services.antuansoft.com/xsd" xmlns:ax21="http://exception.template.services.antuansoft.com/xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/">
+  <wsdl:types>
+    <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://response.template.services.antuansoft.com/xsd">
+            <xs:complexType name="ComplexOperationResponse">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="errorDescription" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="responseCode" nillable="true" type="xs:string"/>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="result" nillable="true" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:schema>
+    <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://exception.template.services.antuansoft.com/xsd">
+            <xs:complexType name="Axis2ServiceException">
+                <xs:sequence/>
+            </xs:complexType>
+        </xs:schema>
+    <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://template.services.antuansoft.com" xmlns:ax22="http://exception.template.services.antuansoft.com/xsd" xmlns:ax24="http://response.template.services.antuansoft.com/xsd">
+            <xs:import namespace="http://exception.template.services.antuansoft.com/xsd"/>
+            <xs:import namespace="http://response.template.services.antuansoft.com/xsd"/>
+            <xs:element name="Axis2ServiceExampleAxis2ServiceException">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="Axis2ServiceException" nillable="true" type="ax21:Axis2ServiceException"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="complexOperation">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="paramList" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="complexOperationResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax23:ComplexOperationResponse"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="simpleOperation">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="number1" type="xs:int"/>
+                        <xs:element minOccurs="0" name="number2" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="simpleOperationResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+  </wsdl:types>
+  <wsdl:message name="simpleOperationRequest">
+    <wsdl:part name="parameters" element="ns:simpleOperation">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="complexOperationRequest">
+    <wsdl:part name="parameters" element="ns:complexOperation">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="Axis2ServiceExampleAxis2ServiceException">
+    <wsdl:part name="parameters" element="ns:Axis2ServiceExampleAxis2ServiceException">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="complexOperationResponse">
+    <wsdl:part name="parameters" element="ns:complexOperationResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="simpleOperationResponse">
+    <wsdl:part name="parameters" element="ns:simpleOperationResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="Axis2ServiceExamplePortType">
+    <wsdl:operation name="complexOperation">
+      <wsdl:input message="tns:complexOperationRequest" wsaw:Action="urn:complexOperation">
+    </wsdl:input>
+      <wsdl:output message="tns:complexOperationResponse" wsaw:Action="urn:complexOperationResponse">
+    </wsdl:output>
+      <wsdl:fault name="Axis2ServiceExampleAxis2ServiceException" message="tns:Axis2ServiceExampleAxis2ServiceException" wsaw:Action="urn:complexOperationAxis2ServiceExampleAxis2ServiceException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="simpleOperation">
+      <wsdl:input message="tns:simpleOperationRequest" wsaw:Action="urn:simpleOperation">
+    </wsdl:input>
+      <wsdl:output message="tns:simpleOperationResponse" wsaw:Action="urn:simpleOperationResponse">
+    </wsdl:output>
+      <wsdl:fault name="Axis2ServiceExampleAxis2ServiceException" message="tns:Axis2ServiceExampleAxis2ServiceException" wsaw:Action="urn:simpleOperationAxis2ServiceExampleAxis2ServiceException">
+    </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="Axis2ServiceExampleSoap11Binding" type="tns:Axis2ServiceExamplePortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="complexOperation">
+      <soap:operation soapAction="urn:complexOperation" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="Axis2ServiceExampleAxis2ServiceException">
+        <soap:fault name="Axis2ServiceExampleAxis2ServiceException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="simpleOperation">
+      <soap:operation soapAction="urn:simpleOperation" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="Axis2ServiceExampleAxis2ServiceException">
+        <soap:fault name="Axis2ServiceExampleAxis2ServiceException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="Axis2ServiceExampleSoap12Binding" type="tns:Axis2ServiceExamplePortType">
+    <soap12:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="complexOperation">
+      <soap12:operation soapAction="urn:complexOperation" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="Axis2ServiceExampleAxis2ServiceException">
+        <soap12:fault name="Axis2ServiceExampleAxis2ServiceException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="simpleOperation">
+      <soap12:operation soapAction="urn:simpleOperation" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="Axis2ServiceExampleAxis2ServiceException">
+        <soap12:fault name="Axis2ServiceExampleAxis2ServiceException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="Axis2ServiceExampleHttpBinding" type="tns:Axis2ServiceExamplePortType">
+    <http:binding verb="POST"/>
+    <wsdl:operation name="complexOperation">
+      <http:operation location="complexOperation"/>
+      <wsdl:input>
+        <mime:content part="parameters" type="text/xml"/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:content part="parameters" type="text/xml"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="simpleOperation">
+      <http:operation location="simpleOperation"/>
+      <wsdl:input>
+        <mime:content part="parameters" type="text/xml"/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:content part="parameters" type="text/xml"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="Axis2ServiceExample">
+    <wsdl:port name="Axis2ServiceExampleHttpSoap12Endpoint" binding="tns:Axis2ServiceExampleSoap12Binding">
+      <soap12:address location="http://localhost:8080/axis2/services/Axis2ServiceExample"/>
+    </wsdl:port>
+    <wsdl:port name="Axis2ServiceExampleHttpEndpoint" binding="tns:Axis2ServiceExampleHttpBinding">
+      <http:address location="http://localhost:8080/axis2/services/Axis2ServiceExample"/>
+    </wsdl:port>
+    <wsdl:port name="Axis2ServiceExampleHttpSoap11Endpoint" binding="tns:Axis2ServiceExampleSoap11Binding">
+      <soap:address location="http://localhost:8080/axis2/services/Axis2ServiceExample"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?><!-- This file was auto-generated from WSDL --><!-- by the Apache Axis2 version: 1.6.0  Built on : May 17, 2011 (04:19:43 IST) --><serviceGroup>
+    <service name="Axis2ServiceExample">
+        <messageReceivers>
+            <messageReceiver mep="http://www.w3.org/ns/wsdl/in-out" class="com.antuansoft.services.ws.skeleton.Axis2ServiceExampleMessageReceiverInOut"/>
+        </messageReceivers>
+        <parameter name="ServiceClass">com.antuansoft.services.ws.skeleton.Axis2ServiceExampleSkeleton</parameter>
+        <parameter name="useOriginalwsdl">true</parameter>
+        <parameter name="modifyUserWSDLPortAddress">true</parameter>
+        <operation name="complexOperation" mep="http://www.w3.org/ns/wsdl/in-out" namespace="http://com.antuansoft.es.ws">
+            <actionMapping>urn:complexOperation</actionMapping>
+            <outputActionMapping>urn:complexOperationResponse</outputActionMapping>
+            <faultActionMapping faultName="Axis2ServiceExampleAxis2ServiceException">urn:complexOperationAxis2ServiceExampleAxis2ServiceException</faultActionMapping>
+            <faultActionMapping faultName="Axis2ServiceExampleAxis2ServiceException_Exception">urn:complexOperationAxis2ServiceExampleAxis2ServiceException</faultActionMapping>
+        </operation>
+        <operation name="simpleOperation" mep="http://www.w3.org/ns/wsdl/in-out" namespace="http://com.antuansoft.es.ws">
+            <actionMapping>urn:simpleOperation</actionMapping>
+            <outputActionMapping>urn:simpleOperationResponse</outputActionMapping>
+            <faultActionMapping faultName="Axis2ServiceExampleAxis2ServiceException">urn:simpleOperationAxis2ServiceExampleAxis2ServiceException</faultActionMapping>
+            <faultActionMapping faultName="Axis2ServiceExampleAxis2ServiceException_Exception">urn:simpleOperationAxis2ServiceExampleAxis2ServiceException</faultActionMapping>
+        </operation>
+    </service>
+</serviceGroup>
