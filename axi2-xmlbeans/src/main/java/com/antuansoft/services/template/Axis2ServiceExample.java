@@ -20,10 +20,9 @@ public abstract class Axis2ServiceExample {
 	
 	/**
 	 * Complex operation of the web service with complex input and output params
-	 * This operation returns a response code (OK  - ERROR), list with the paramList values and error description.
+	 * This operation returns a response code (OK  - ERROR), and a list with the paramList values or error description if an error has hapenned.
 	 * @param paramList
-	 * @param isError
-	 * @return
+	 * @return {@link ComplexOperationResponse}
 	 * @throws Axis2ServiceException
 	 */
 	public ComplexOperationResponse complexOperation(List<String> paramList) throws Axis2ServiceException {return null;}

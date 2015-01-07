@@ -290,7 +290,7 @@
   
   
   <profile>
-			<id>java2wsdl2code</id> <!-- GENERATE WSLD, SERVICE.XML AND CODE SKELETON BASED ON CamService.java -->
+			<id>java2wsdl2code</id> <!-- GENERATE WSLD, SERVICE.XML AND CODE SKELETON BASED ON Axis2ServiceExample.java -->
 			<build>				
 				<plugins>
 				
@@ -335,12 +335,8 @@
 				        <artifactId>axis2-java2wsdl-maven-plugin</artifactId>
 				        <version>1.6.0</version>
 				        <configuration>
-				          <className>com.antuansoft.services.template.Axis2ServiceExample</className>
-				          <!--  
-					          <schemaTargetNamespace>http://com.securitasdirect.es.ws/xsd</schemaTargetNamespace>
-					      --> 
-					     <targetNamespace>http://com.antuansoft.es.ws</targetNamespace>
-				         
+				          <className>com.antuansoft.services.template.Axis2ServiceExample</className>				          
+					      <targetNamespace>http://com.antuansoft.es.ws</targetNamespace>				         
 				          <outputFileName>${project.build.directory}/build/classes/META-INF/Axis2ServiceExample.wsdl</outputFileName>
 				        </configuration>
 				        <executions>
